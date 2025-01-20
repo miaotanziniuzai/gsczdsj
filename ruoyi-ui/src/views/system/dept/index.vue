@@ -45,7 +45,7 @@
           @click="toggleExpandAll"
         >展开/折叠</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getDeptList"></right-toolbar>
     </el-row>
 
     <el-table
@@ -57,13 +57,17 @@
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
       <el-table-column prop="deptName" label="部门名称" width="260"></el-table-column>
+      <el-table-column prop="mofDivName" label="区划名称" width="260"></el-table-column>
+<!--
       <el-table-column prop="orderNum" label="排序" width="200"></el-table-column>
+      -->
       <el-table-column prop="status" label="状态" width="100">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="200">
+
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -95,7 +99,15 @@
         </template>
       </el-table-column>
     </el-table>
-
+ <!-- 分页组件 -->
+    <el-pagination
+      background
+      layout="prev, pager, next, sizes, total"
+      :current-page.sync="queryParams.pageNum"
+      :page-size.sync="queryParams.pageSize"
+      :total="total"
+      @current-change="handleSizeChange"
+    ></el-pagination>
     <!-- 添加或修改部门对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -162,6 +174,21 @@ import { listDept, getDept, delDept, addDept, updateDept, listDeptExcludeChild }
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
+
+import axios from 'axios';
+
+import service from '@/utils/request'; // 确认路径正确
+
+service
+  .get('/system/dept/list')
+  .then((response) => {
+    console.log('成功:', response.data);
+  })
+  .catch((error) => {
+    console.error('请求失败:', error);
+  });
+
+
 export default {
   name: "Dept",
   dicts: ['sys_normal_disable'],
@@ -185,10 +212,17 @@ export default {
       // 重新渲染表格状态
       refreshTable: true,
       // 查询参数
-      queryParams: {
+      total: 0,
+        queryParams: {
+        pageNum: 1, // 当前页码
+        pageSize: 10, // 每页大小
         deptName: undefined,
         status: undefined
       },
+       // 部门数据
+       //   deptList: [], // 数据列表
+       //   total: 0, // 数据总条数
+          loading: false, // 加载状态
       // 表单参数
       form: {},
       // 表单校验
@@ -220,16 +254,49 @@ export default {
     };
   },
   created() {
-    this.getList();
+    console.log('mounted 钩子触发'); // 验证生命周期是否正常
+
+    this.getDeptList();
   },
   methods: {
+
+  handleSizeChange(pageSize) {
+      this.queryParams.pageSize = pageSize;
+      this.getDeptList();
+    },
+    handleCurrentChange(pageNum) {
+      this.queryParams.pageNum = pageNum;
+      this.getDeptList();
+    },
     /** 查询部门列表 */
-    getList() {
+    getDeptList() {
+      console.log('getDeptList 方法被调用'); // 验证方法是否执行
       this.loading = true;
-      listDept(this.queryParams).then(response => {
-        this.deptList = this.handleTree(response.data, "deptId");
-        this.loading = false;
-      });
+      listDept(this.queryParams)
+        .then((response) => {
+         console.log('完整响应：', response); // 打印完整响应数据
+          const code = response.code || '未返回';
+          const data = response.data || null;
+          console.log('响应 code：', code);
+          console.log('响应 data：', data);
+          if (response.code === 200 && response) {
+            console.log('接口返回数据：', response);
+           // this.deptList = response.rows;
+            this.deptList = this.handleTree(response.rows, 'deptId');
+            this.total = response.total;
+            console.log('绑定到表格的数据：', this.deptList);
+          } else {
+            console.error('返回状态异常：', response);
+            this.$message.error(response.msg || '数据加载失败');
+          }
+        })
+        .catch((error) => {
+          console.error('请求异常：', error);
+          this.$message.error('数据加载失败，请稍后重试');
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     /** 转换部门数据结构 */
     normalizer(node) {
@@ -242,6 +309,15 @@ export default {
         children: node.children
       };
     },
+     /** 查询菜单下拉树结构 */
+        getTreeselect() {
+          listMenu().then(response => {
+            this.menuOptions = [];
+            const menu = { menuId: 0, menuName: '主类目', children: [] };
+            menu.children = this.handleTree(response, "menuId");
+            this.menuOptions.push(menu);
+          });
+        },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -263,7 +339,7 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.getList();
+      this.getDeptList();
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -314,13 +390,13 @@ export default {
             updateDept(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
-              this.getList();
+              this.getDeptList();
             });
           } else {
             addDept(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
-              this.getList();
+              this.getDeptList();
             });
           }
         }
@@ -331,10 +407,11 @@ export default {
       this.$modal.confirm('是否确认删除名称为"' + row.deptName + '"的数据项？').then(function() {
         return delDept(row.deptId);
       }).then(() => {
-        this.getList();
+        this.getDeptList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
     }
   }
+
 };
 </script>
