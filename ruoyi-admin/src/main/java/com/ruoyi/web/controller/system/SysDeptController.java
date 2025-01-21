@@ -1,6 +1,9 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.TreeSelect;
+import com.ruoyi.common.core.page.TableDataInfo;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,12 +42,24 @@ public class SysDeptController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:dept:list')")
     @GetMapping("/list")
-    public AjaxResult list(SysDept dept)
-    {
-        List<SysDept> depts = deptService.selectDeptList(dept);
-        return success(depts);
+    public TableDataInfo list(SysDept dept) {
+        startPage(); // 分页处理
+        List<SysDept> list = deptService.selectDeptList(dept);
+        return getDataTable(list);
     }
 
+
+//
+//    public AjaxResult list(SysDept dept)
+//    {
+//        List<SysDept> depts = deptService.selectDeptList(dept);
+//        return success(depts);
+//    }
+//@GetMapping("/tree")
+//public AjaxResult getDeptTree() {
+//    List<TreeSelect> tree = deptService.selectDeptTree();
+//    return AjaxResult.success(tree);
+//}
     /**
      * 查询部门列表（排除节点）
      */

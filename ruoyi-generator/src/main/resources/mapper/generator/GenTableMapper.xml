@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="subTableFkName" column="sub_table_fk_name" />
 		<result property="className"      column="class_name"        />
 		<result property="tplCategory"    column="tpl_category"      />
-		<result property="tplWebType"     column="tpl_web_type"      />
+	<!--	<result property="tplWebType"     column="tpl_web_type"      /> -->
 		<result property="packageName"    column="package_name"      />
 		<result property="moduleName"     column="module_name"       />
 		<result property="businessName"   column="business_name"     />
@@ -141,7 +141,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="tableComment != null and tableComment != ''">table_comment,</if>
 			<if test="className != null and className != ''">class_name,</if>
 			<if test="tplCategory != null and tplCategory != ''">tpl_category,</if>
-			<if test="tplWebType != null and tplWebType != ''">tpl_web_type,</if>
+		<!--	<if test="tplWebType != null and tplWebType != ''">tpl_web_type,</if> -->
 			<if test="packageName != null and packageName != ''">package_name,</if>
 			<if test="moduleName != null and moduleName != ''">module_name,</if>
 			<if test="businessName != null and businessName != ''">business_name,</if>
@@ -157,7 +157,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="tableComment != null and tableComment != ''">#{tableComment},</if>
 			<if test="className != null and className != ''">#{className},</if>
 			<if test="tplCategory != null and tplCategory != ''">#{tplCategory},</if>
-			<if test="tplWebType != null and tplWebType != ''">#{tplWebType},</if>
+		<!--	<if test="tplWebType != null and tplWebType != ''">#{tplWebType},</if> -->
 			<if test="packageName != null and packageName != ''">#{packageName},</if>
 			<if test="moduleName != null and moduleName != ''">#{moduleName},</if>
 			<if test="businessName != null and businessName != ''">#{businessName},</if>
@@ -187,7 +187,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="genType != null and genType != ''">gen_type = #{genType},</if>
             <if test="genPath != null and genPath != ''">gen_path = #{genPath},</if>
             <if test="tplCategory != null and tplCategory != ''">tpl_category = #{tplCategory},</if>
-            <if test="tplWebType != null and tplWebType != ''">tpl_web_type = #{tplWebType},</if>
+          <!--  <if test="tplWebType != null and tplWebType != ''">tpl_web_type = #{tplWebType},</if> -->
             <if test="packageName != null and packageName != ''">package_name = #{packageName},</if>
             <if test="moduleName != null and moduleName != ''">module_name = #{moduleName},</if>
             <if test="businessName != null and businessName != ''">business_name = #{businessName},</if>

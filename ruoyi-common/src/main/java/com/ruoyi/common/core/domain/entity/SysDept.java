@@ -51,7 +51,11 @@ public class SysDept extends BaseEntity
 
     /** 父部门名称 */
     private String parentName;
-    
+    /** 处室区划编码 */
+    private String mofDivCode;
+
+    /** 处室区划名称 */
+    private String mofDivName;
     /** 子部门 */
     private List<SysDept> children = new ArrayList<SysDept>();
 
@@ -181,6 +185,26 @@ public class SysDept extends BaseEntity
         this.children = children;
     }
 
+    // Getter 和 Setter
+    public String getMofDivCode() {
+        return mofDivCode;
+    }
+
+    public void setMofDivCode(String mofDivCode) {
+        this.mofDivCode = mofDivCode;
+    }
+    // Getter 和 Setter
+    public String getMofDivName() {
+        return mofDivName;
+    }
+
+    public void setMofDivName(String mofDivName) {
+        this.mofDivName = mofDivName;
+    }
+
+
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -198,6 +222,9 @@ public class SysDept extends BaseEntity
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
-            .toString();
+            .append("mofDivCode", getMofDivCode())//给处室增加区划字段
+            .append("mofDivName", getMofDivCode())//给处室增加区划字段
+
+                .toString();
     }
 }

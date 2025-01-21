@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysCompanyMapper">
+
+    <!-- 查询单位列表 -->
+    <select id="selectCompanyList" resultType="com.ruoyi.system.domain.SysCompany">
+        SELECT
+        chr_id AS chrId,
+        parent_id AS parentId,
+        chr_code AS chrCode,
+        chr_name AS chrName,
+        is_leaf AS isLeaf,
+        level_no AS levelNo,
+        mof_div_code AS mofDivCode,
+        mof_div_name AS mofDivName,
+        status,
+        create_by AS createBy,
+        create_time AS createTime,
+        update_by AS updateBy,
+        update_time AS updateTime,
+        remark
+        FROM sys_company
+        <where>
+            <if test="chrName != null and chrName != ''">
+                AND chr_name LIKE CONCAT('%', #{chrName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 通过ID查询单位 -->
+    <select id="selectCompanyById" resultType="com.ruoyi.system.domain.SysCompany">
+        SELECT * FROM sys_company WHERE chr_id = #{companyId}
+    </select>
+
+    <!-- 新增单位 -->
+    <insert id="insertCompany">
+        INSERT INTO sys_company (chr_id, chr_name, is_leaf, level_no, mof_div_code, mof_div_name,
+        status, create_by, create_time, update_by, update_time, remark)
+        VALUES (#{chrId}, #{chrName}, #{isLeaf}, #{levelNo}, #{mofDivCode}, #{mofDivName},
+        #{status}, #{createBy}, NOW(), #{updateBy}, NOW(), #{remark})
+    </insert>
+
+    <!-- 修改单位 -->
+    <update id="updateCompany">
+        UPDATE sys_company
+        SET chr_name = #{chrName},
+        is_leaf = #{isLeaf},
+        level_no = #{levelNo},
+        mof_div_code = #{mofDivCode},
+        mof_div_name = #{mofDivName},
+        status = #{status},
+        update_by = #{updateBy},
+        update_time = NOW(),
+        remark = #{remark}
+        WHERE chr_id = #{chrId}
+    </update>
+
+    <!-- 删除单位 -->
+    <update id="deleteCompanyById">
+        UPDATE sys_company
+        SET remark = '1',
+        update_by = #{updateBy},
+        update_time = NOW()
+        WHERE chr_id = #{chrId}
+        AND remark != '1'
+    </update>
+
+    <!-- 批量删除单位 -->
+    <delete id="deleteCompanyByIds">
+        DELETE FROM sys_company WHERE chr_id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

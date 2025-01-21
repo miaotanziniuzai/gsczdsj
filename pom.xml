@@ -10,13 +10,15 @@
 
     <name>ruoyi</name>
     <url>http://www.ruoyi.vip</url>
-    <description>若依管理系统</description>
+    <description>甘肃省财政资金运行监测分析平台</description>
     
     <properties>
         <ruoyi.version>3.8.8</ruoyi.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
         <spring-boot.version>2.5.15</spring-boot.version>
         <druid.version>1.2.23</druid.version>
@@ -67,6 +69,8 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+
 
             <!-- 覆盖logback的依赖配置-->
             <dependency>

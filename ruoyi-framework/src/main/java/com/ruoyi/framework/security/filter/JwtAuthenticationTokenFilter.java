@@ -31,7 +31,20 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException
     {
+
+        // 获取请求路径
+        String requestURI = request.getRequestURI();
+
+        // 放开指定路径的鉴权
+        if (requestURI.startsWith("/prod-api/system/company/list")) {
+            System.out.println("Matched URI, bypassing authentication.");
+            chain.doFilter(request, response); // 直接放行
+            return;
+        }
+
+
         LoginUser loginUser = tokenService.getLoginUser(request);
+
         if (StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getAuthentication()))
         {
             tokenService.verifyToken(loginUser);
