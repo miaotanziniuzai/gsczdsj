@@ -95,6 +95,15 @@ public interface ISysUserService
      * 
      * @param user 用户信息
      */
+
+    /**
+     * 校验身份证号码是否唯一
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    public boolean checkIDUnique(SysUser user);
+
     public void checkUserAllowed(SysUser user);
 
     /**
@@ -135,6 +144,8 @@ public interface ISysUserService
      * @param roleIds 角色组
      */
     public void insertUserAuth(Long userId, Long[] roleIds);
+
+
 
     /**
      * 修改用户状态

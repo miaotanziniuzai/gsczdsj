@@ -112,10 +112,10 @@ public interface SysUserMapper
     /**
      * 校验手机号码是否唯一
      *
-     * @param phonenumber 手机号码
+     * @param inputer_tel 手机号码
      * @return 结果
      */
-    public SysUser checkPhoneUnique(String phonenumber);
+    public SysUser checkPhoneUnique(String inputer_tel);
 
     /**
      * 校验email是否唯一
@@ -123,5 +123,15 @@ public interface SysUserMapper
      * @param email 用户邮箱
      * @return 结果
      */
+
     public SysUser checkEmailUnique(String email);
+
+
+    /**
+     * 校验身份证号码是否唯一
+     *
+     * @param id_number 手机号码
+     * @return 结果
+     */
+    public SysUser checkIDUnique(String id_number);
 }

@@ -123,8 +123,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="email != null and email != ''">#{email},</if>
  			<if test="status != null">#{status},</if>
  			<if test="createBy != null and createBy != ''">#{createBy},</if>
-		<if test="mofDivCode != null and mofDivCode != ''">#{mof_div_code},</if>
-		<if test="mofDivName != null and mofDivName != ''">#{mof_div_name},</if>
+		<if test="mofDivCode != null and mofDivCode != ''">#{mofDivCode},</if>
+		<if test="mofDivName != null and mofDivName != ''">#{mofDivName},</if>
 
 		sysdate()
  		)
@@ -142,8 +142,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="email != null">email = #{email},</if>
  			<if test="status != null and status != ''">status = #{status},</if>
  			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
-			<if test="mofDivCode != null and mofDivCode != ''">mof_div_code = #{mof_div_code},</if>
-			<if test="mofDivName != null and mofDivName != ''">mof_div_name = #{mof_div_name},</if>
+			<if test="mofDivCode != null and mofDivCode != ''">mof_div_code = #{mofDivCode},</if>
+			<if test="mofDivName != null and mofDivName != ''">mof_div_name = #{mofDivName},</if>
 
 			update_time = sysdate()
  		</set>

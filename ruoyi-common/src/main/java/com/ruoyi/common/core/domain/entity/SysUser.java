@@ -43,7 +43,7 @@ public class SysUser extends BaseEntity
 
     /** 手机号码 */
     @Excel(name = "手机号码", cellType = ColumnType.TEXT)
-    private String phonenumber;
+    private String inputer_tel;
 
     /** 用户性别 */
     @Excel(name = "用户性别", readConverterExp = "0=男,1=女,2=未知")
@@ -167,14 +167,14 @@ public class SysUser extends BaseEntity
     }
 
     @Size(min = 0, max = 11, message = "手机号码长度不能超过11个字符")
-    public String getPhonenumber()
+    public String getinputer_tel()
     {
-        return phonenumber;
+        return inputer_tel;
     }
 
-    public void setPhonenumber(String phonenumber)
+    public void setinputer_tel(String inputer_tel)
     {
-        this.phonenumber = phonenumber;
+        this.inputer_tel = inputer_tel;
     }
 
     public String getSex()
@@ -297,6 +297,19 @@ public class SysUser extends BaseEntity
         this.roleId = roleId;
     }
 
+
+    @Excel(name = "身份证号")
+    private String idNumber;
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
+    }
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -305,7 +318,7 @@ public class SysUser extends BaseEntity
             .append("userName", getUserName())
             .append("nickName", getNickName())
             .append("email", getEmail())
-            .append("phonenumber", getPhonenumber())
+            .append("inputer_tel", getinputer_tel())
             .append("sex", getSex())
             .append("avatar", getAvatar())
             .append("password", getPassword())
@@ -319,6 +332,7 @@ public class SysUser extends BaseEntity
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
             .append("dept", getDept())
+            .append("idNumber", getIdNumber())
             .toString();
     }
 }
