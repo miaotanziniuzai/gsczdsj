@@ -53,6 +53,12 @@ public class SysDept extends BaseEntity
     private String parentName;
     /** 处室区划编码 */
     private String mofDivCode;
+    /** 区划编码 */
+    private String tenantCode;
+    /** 区划名称 */
+    private String tenantName;
+    /** 节点路径 */
+    private String sortPath;
 
     /** 处室区划名称 */
     private String mofDivName;

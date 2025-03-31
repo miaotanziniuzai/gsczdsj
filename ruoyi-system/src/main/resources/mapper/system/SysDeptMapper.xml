@@ -24,6 +24,66 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="mofDivName" column="mof_div_Name" />
 
 	</resultMap>
+
+
+	<select id="selectDeptTreeWithTenant" resultMap="DeptTreeResult">
+		-- 递归查询租户树
+		WITH RECURSIVE tenant_tree AS (
+		SELECT
+		t.code,
+		t.name,
+		t.parent_id,
+		CAST(t.code AS CHAR(255)) AS sort_path
+		FROM
+		sys_tenant t
+		WHERE
+		t.parent_id IS NULL OR t.parent_id = 0
+		UNION ALL
+		SELECT
+		t.code,
+		t.name,
+		t.parent_id,
+		CONCAT(tt.sort_path, ',', t.code)
+		FROM
+		sys_tenant t
+		JOIN
+		tenant_tree tt ON t.parent_id = tt.code
+		),
+		-- 将部门关联到租户树
+		dept_tenant_join AS (
+		SELECT
+		tt.code AS tenant_code,
+		tt.name AS tenant_name,
+		tt.sort_path,
+		d.dept_id,
+		d.dept_name,
+		d.parent_id AS dept_parent_id
+		FROM
+		tenant_tree tt
+		LEFT JOIN
+		sys_dept d ON tt.code = d.parent_id
+		)
+		SELECT
+		tenant_code,
+		tenant_name,
+		sort_path,
+		dept_id,
+		dept_name,
+		dept_parent_id
+		FROM
+		dept_tenant_join
+		ORDER BY
+		sort_path;
+	</select>
+
+	<resultMap id="DeptTreeResult" type="com.ruoyi.common.core.domain.entity.SysDept">
+		<id property="deptId" column="dept_id" />
+		<result property="parentId" column="dept_parent_id" />
+		<result property="deptName" column="dept_name" />
+		<result property="tenantCode" column="tenant_code" />
+		<result property="tenantName" column="tenant_name" />
+		<result property="sortPath" column="sort_path" />
+	</resultMap>
 	
 	<sql id="selectDeptVo">
         select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_time ,d.mof_div_code,d.mof_div_name

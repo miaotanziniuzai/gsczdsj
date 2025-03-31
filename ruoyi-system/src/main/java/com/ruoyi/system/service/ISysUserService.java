@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysTenant;
 import com.ruoyi.common.core.domain.entity.SysUser;
 
 /**
@@ -214,4 +216,14 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
+
+    /**
+     *
+     * 2025.03.21 增加根据区划获取用户的方法
+     *
+     *
+     *
+     *
+     */
+    public List<SysTenant> selectTenantTree();
 }

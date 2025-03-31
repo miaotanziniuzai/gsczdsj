@@ -144,4 +144,13 @@ public class SysDeptController extends BaseController
         deptService.checkDeptDataScope(deptId);
         return toAjax(deptService.deleteDeptById(deptId));
     }
+
+
+
+    //2025.03.19 增加控制层，用以响应前端方法调用的请求
+    @GetMapping("/tree-with-tenant")
+    public AjaxResult selectDeptTreeWithTenant() {
+        List<SysDept> deptTree = deptService.selectDeptTreeWithTenant();
+        return AjaxResult.success(deptTree);
+    }
 }

@@ -36,6 +36,19 @@ public class SysDeptServiceImpl implements ISysDeptService
     private SysRoleMapper roleMapper;
 
     /**
+     * 以区划名称为节点展示处室
+     *
+     *
+     * @return 部门信息集合
+     */
+
+
+    @Override
+    public List<SysDept> selectDeptTreeWithTenant() {
+        return deptMapper.selectDeptTreeWithTenant();
+    }
+
+    /**
      * 查询部门管理数据
      * 
      * @param dept 部门信息
@@ -47,6 +60,8 @@ public class SysDeptServiceImpl implements ISysDeptService
     {
         return deptMapper.selectDeptList(dept);
     }
+
+
 
     /**
      * 查询部门树结构信息

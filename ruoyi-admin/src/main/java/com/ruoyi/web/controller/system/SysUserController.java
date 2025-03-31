@@ -63,6 +63,16 @@ public class SysUserController extends BaseController
         startPage();
         List<SysUser> list = userService.selectUserList(user);
         return getDataTable(list);
+
+    }
+
+    /**
+     *新增区划树接口
+     *
+     */
+    @GetMapping("/tenantTree")
+    public AjaxResult getTenantTree() {
+        return success(userService.selectTenantTree());
     }
 
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
@@ -257,4 +267,6 @@ public class SysUserController extends BaseController
     {
         return success(deptService.selectDeptTreeList(dept));
     }
+
+
 }

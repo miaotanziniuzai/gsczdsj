@@ -24,6 +24,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"   column="update_time"  />
         <result property="remark"       column="remark"       />
 		<result property="idNumber"     column="id_number" />
+		<result property="mof_div_code" column="mof_div_code" />
+		<result property="mof_div_name" column="mof_div_name" />
         <association property="dept"    javaType="SysDept"         resultMap="deptResult" />
         <collection  property="roles"   javaType="java.util.List"  resultMap="RoleResult" />
     </resultMap>
@@ -48,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectUserVo">
-        select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.inputer_tel, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,u.id_number,
+        select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.inputer_tel, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,u.id_number,u.mof_div_code,u.mof_div_name,
         d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.status as dept_status,
         r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status
         from sys_user u
@@ -56,10 +58,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		    left join sys_user_role ur on u.user_id = ur.user_id
 		    left join sys_role r on r.role_id = ur.role_id
     </sql>
-    
+
+
+	<sql id="selectUser">
+		SELECT u.user_id, u.user_name, u.nick_name, u.email, u.phone_number,
+		u.mof_div_code, u.mof_div_name, t.name AS tenant_name
+		FROM sys_user u
+		LEFT JOIN sys_tenant t ON u.mof_div_code = t.code
+	</sql>
+<!--
+	<select id="selectUserList" resultType="com.ruoyi.common.core.domain.entity">
+		SELECT * FROM sys_user
+		<where>
+			<if test="mof_div_code != null and mof_div_code != ''">
+				AND mof_div_code = #{mof_div_code}
+			</if>
+		</where>
+	</select>
+    -->
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
-		select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.inputer_tel, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,u.id_number, d.dept_name, d.leader from sys_user u
-		left join sys_dept d on u.dept_id = d.dept_id
+		select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.inputer_tel, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.mof_div_code,u.mof_div_name,u.create_by, u.create_time, u.remark,u.id_number, d.id, d.code,d.name,d.parent_id from sys_user u
+		left join sys_tenant d on u.mof_div_code = d.id
 		where u.del_flag = '0'
 		<if test="userId != null and userId != 0">
 			AND u.user_id = #{userId}
@@ -78,6 +97,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		<if test="nickName != null and nickName != ''">
 			AND u.nick_name like concat('%', #{nickName}, '%')
+		</if>
+		<if test="mof_div_code != null and mof_div_code != ''">
+			AND u.mof_div_code like concat('%', #{mof_div_code}, '%')
+		</if>
+		<if test="mof_div_name != null and mof_div_name != ''">
+			AND u.mof_div_name like concat('%', #{mof_div_name}, '%')
 		</if>
 		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
 			AND date_format(u.create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
@@ -111,6 +136,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="nickName != null and nickName != ''">
 			AND u.nick_name like concat('%', #{nickName}, '%')
 		</if>
+		<if test="mof_div_code != null and mof_div_code != ''">
+			AND u.mof_div_code like concat('%', #{mof_div_code}, '%')
+		</if>
+		<if test="mof_div_name != null and mof_div_name != ''">
+			AND u.mof_div_name like concat('%', #{mof_div_name}, '%')
+		</if>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
@@ -134,6 +165,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		<if test="nickName != null and nickName != ''">
 			AND u.nick_name like concat('%', #{nickName}, '%')
+		</if>
+		<if test="mof_div_code != null and mof_div_code != ''">
+			AND u.mof_div_code like concat('%', #{mof_div_code}, '%')
+		</if>
+		<if test="mof_div_name != null and mof_div_name != ''">
+			AND u.mof_div_name like concat('%', #{mof_div_name}, '%')
 		</if>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
@@ -179,7 +216,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="status != null and status != ''">status,</if>
  			<if test="createBy != null and createBy != ''">create_by,</if>
  			<if test="remark != null and remark != ''">remark,</if>
-			<if test="id_number != null and remark != ''">id_number,</if>
+			<if test="id_number != null and id_number != ''">id_number,</if>
+			<if test="mof_div_code != null and mof_div_code != ''">mof_div_code,</if>
+			<if test="mof_div_name != null and mof_div_name != ''">mof_div_name,</if>
  			create_time
  		)values(
  			<if test="userId != null and userId != ''">#{userId},</if>
@@ -190,6 +229,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="avatar != null and avatar != ''">#{avatar},</if>
  			<if test="inputer_tel != null and inputer_tel != ''">#{inputer_tel},</if>
 			<if test="id_number != null and id_number != ''">#{id_number},</if>
+			<if test="mof_div_code != null and mof_div_code != ''">#{mof_div_code},</if>
+			<if test="mof_div_name != null and mof_div_name != ''">#{mof_div_name},</if>
 			<if test="sex != null and sex != ''">#{sex},</if>
  			<if test="password != null and password != ''">#{password},</if>
  			<if test="status != null and status != ''">#{status},</if>
@@ -216,7 +257,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="loginDate != null">login_date = #{loginDate},</if>
  			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
  			<if test="remark != null">remark = #{remark},</if>
- 			update_time = sysdate()
+			<if test="mof_div_code != null">mof_div_code = #{mof_div_code},</if>
+			<if test="mof_div_name != null">mof_div_name = #{mof_div_name},</if>
+
+			update_time = sysdate()
  		</set>
  		where user_id = #{userId}
 	</update>

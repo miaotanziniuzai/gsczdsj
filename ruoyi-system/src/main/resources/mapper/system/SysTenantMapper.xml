@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysTenantMapper">
+	<select id="selectTenantTree" resultType="com.ruoyi.common.core.domain.entity.SysTenant">
+		SELECT id,code, name , parent_id,is_show,tenant_id,id_leaf,level_num,disp_order
+		FROM sys_tenant;
+		<!-- 如果需要根据实际情况添加查询条件，比如排序等，可以在这里修改 SQL 语句 -->
+	</select>
+</mapper>

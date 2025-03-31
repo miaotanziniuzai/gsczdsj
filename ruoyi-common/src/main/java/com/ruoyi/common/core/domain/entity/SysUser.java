@@ -1,8 +1,10 @@
-package com.ruoyi.common.core.domain.entity;
+    package com.ruoyi.common.core.domain.entity;
 
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -17,6 +19,7 @@ import com.ruoyi.common.xss.Xss;
  * 
  * @author ruoyi
  */
+
 public class SysUser extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -298,7 +301,7 @@ public class SysUser extends BaseEntity
     }
 
 
-    @Excel(name = "身份证号")
+    @Excel(name = "身份证号")   //原来的phonenumber，现在将inputer_tel作为电话号码
     private String idNumber;
 
     public String getIdNumber() {
@@ -307,6 +310,32 @@ public class SysUser extends BaseEntity
 
     public void setIdNumber(String idNumber) {
         this.idNumber = idNumber;
+    }
+    //2025.03.18 用户属性增加区划编码和区划名称，其值来自于bas_mof_div
+    @Excel(name = "区划编码")
+    private String mof_div_code;
+
+    public String getMof_div_code() {
+        return mof_div_code;
+    }
+
+    public void setMof_div_code(String mof_div_code) {
+        this.mof_div_code = mof_div_code;
+    }
+
+    @Excel(name = "区划名称")
+    private String mof_div_name;
+
+
+    @JsonBackReference
+    private SysTenant tenant;
+
+    public String getMof_div_name() {
+        return mof_div_name;
+    }
+
+    public void setMof_div_name(String mof_div_name) {
+        this.mof_div_name = mof_div_name;
     }
 
 
@@ -333,6 +362,8 @@ public class SysUser extends BaseEntity
             .append("remark", getRemark())
             .append("dept", getDept())
             .append("idNumber", getIdNumber())
+                .append("mof_div_code", getMof_div_code())
+                .append("mof_div_name", getMof_div_name())
             .toString();
     }
 }

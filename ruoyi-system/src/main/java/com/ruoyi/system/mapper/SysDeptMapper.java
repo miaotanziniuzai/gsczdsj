@@ -12,6 +12,17 @@ import com.ruoyi.common.core.domain.entity.SysDept;
 public interface SysDeptMapper
 {
     /**
+     * 按照区划名称将部门以树形展示
+     *
+
+     * @return 部门信息集合
+     */
+
+    public List<SysDept> selectDeptTreeWithTenant();
+
+
+
+    /**
      * 查询部门管理数据
      * 
      * @param dept 部门信息
